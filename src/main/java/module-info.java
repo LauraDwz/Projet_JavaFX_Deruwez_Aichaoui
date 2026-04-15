@@ -6,4 +6,5 @@ module com.fst.projet {
 
     opens com.fst.projet to javafx.fxml;
     exports com.fst.projet;
+
 }
