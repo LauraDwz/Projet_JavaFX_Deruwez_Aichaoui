@@ -7,6 +7,8 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
+//Voir si je dois le supprimer car il sert plus à rien ??
+
 public class HelloApplication extends Application {
     @Override
     public void start(Stage stage) throws IOException {
