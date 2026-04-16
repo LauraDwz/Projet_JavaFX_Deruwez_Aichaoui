@@ -1,6 +1,4 @@
-import filters.*;
-import transforms.ImageTransform;
-
+package com.fst.projet;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
