@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.image.ImageView?>
+<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.fst.projet.ImageAppController"
+      prefHeight="400.0" prefWidth="600.0">
+    <padding>
+        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
+    </padding>
+    <center>
+        <ImageView fx:id="imageView"
+                   fitWidth="600"
+                   fitHeight="500"
+                   preserveRatio="true"
+        />
+    </center>
+    <bottom>
+        <Label fx:id="statusBar"/>
+    </bottom>
+    <right>
+        <VBox>
+            <Button text="Charger une image" onAction="#loadImage"/>
+            <Button text="Réinitialiser" onAction="#resetImage"/>
+            <Separator/>
+            <Label text="Transformations"/>
+
+
+        </VBox>
+        <!-- Je ne sais pas quoi mettre ici, censé être la sidebar -->
+    </right>
+
+</BorderPane>
