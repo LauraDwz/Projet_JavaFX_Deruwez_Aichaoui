@@ -9,7 +9,7 @@ import javafx.scene.control.Separator;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
-import javafx.scene.layout.StackPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Window;
@@ -21,9 +21,9 @@ public class ImageAppController {
     @FXML
     private ImageView imageView;
     @FXML
-    private StackPane imageContainer;
-    @FXML
     private Label statusBar;
+
+    @FXML private Pane centerPane;
 
     @FXML
     private VBox menuVBox;
@@ -40,8 +40,8 @@ public class ImageAppController {
 
     @FXML
     public void initialize() {
-        imageView.fitWidthProperty().bind(imageContainer.widthProperty());
-        imageView.fitHeightProperty().bind(imageContainer.heightProperty());
+        imageView.fitWidthProperty().bind(centerPane.widthProperty());
+        imageView.fitHeightProperty().bind(centerPane.heightProperty());
         statusBar.setText("Chargez une image pour commencer.");
         menuVBox.getChildren().add(new Label("Transformations"));
         for (ImageTransform.Type t : ImageTransform.Type.values()) {
@@ -94,10 +94,6 @@ public class ImageAppController {
                 imageView.setImage(currentImage);
                 statusBar.setText("Image chargée : " + file.getName()
                         + "  (" + (int) img.getWidth() + " × " + (int) img.getHeight() + " px)");
-                System.out.println("IMAGE VIEW = " + imageView);
-                System.out.println("IMAGE = " + img);
-                System.out.println("WIDTH = " + img.getWidth());
-                System.out.println("HEIGHT = " + img.getHeight());
             } catch (Exception ex) {
                 statusBar.setText("Erreur : impossible de charger l'image.");
             }
