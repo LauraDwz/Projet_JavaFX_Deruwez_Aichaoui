@@ -1,32 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.image.ImageView?>
 <BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.fst.projet.ImageAppController"
-      prefHeight="400.0" prefWidth="600.0" fx:id="root">
-    <padding>
-        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
-    </padding>
+      prefHeight="400.0" prefWidth="600.0" stylesheets="@style.css" >
     <center>
         <Pane fx:id="centerPane">
             <ImageView fx:id="imageView" preserveRatio="true"/>
         </Pane>
     </center>
     <bottom>
-        <Label fx:id="statusBar"/>
+        <Label fx:id="statusBar" styleClass="status-bar" maxWidth="Infinity"/>
     </bottom>
     <right>
-        <VBox>
+        <VBox styleClass="side-menu" spacing="12">
             <Button text="Choisir un fichier" onAction="#loadImage"/>
             <Button text="Réinitialiser" onAction="#resetImage"/>
             <Separator/>
-            <VBox fx:id="menuVBox" />
+            <VBox fx:id="menuVBox" styleClass="menu-content"/>
         </VBox>
     </right>
 

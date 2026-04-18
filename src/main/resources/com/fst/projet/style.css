@@ -1,0 +1,46 @@
+.root {
+    -fx-font-family: "Segoe UI", Arial;
+    -fx-padding: 0;
+}
+
+.status-bar {
+    -fx-background-color: #e0e0e0;
+    -fx-padding: 8 12;
+    -fx-border-color: #cfcfcf;
+    -fx-border-width: 1 0 0 0;
+}
+
+.side-menu {
+    -fx-background-color: #fafafa;
+    -fx-padding: 15;
+    -fx-spacing: 12;
+    -fx-border-color: #e6e6e6;
+    -fx-border-width: 0 0 0 1; /* séparation gauche */
+    -fx-alignment: center;
+}
+
+.menu-content {
+    -fx-spacing: 10;   /* 👈 IMPORTANT */
+    -fx-alignment: top-center;
+}
+
+.button {
+    -fx-background-color: #4a90e2;
+    -fx-text-fill: white;
+    -fx-padding: 8 12;
+    -fx-background-radius: 6;
+    -fx-cursor: hand;
+    -fx-max-width: 180;
+}
+
+.button:hover {
+    -fx-background-color: #357ABD;
+}
+
+.button:pressed {
+    -fx-background-color: #2d5f9e;
+}
+
+.separator {
+    -fx-opacity: 0.5;
+}
