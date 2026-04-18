@@ -31,6 +31,14 @@ public class ImageAppController {
     private WritableImage originalImage;
     private WritableImage currentImage;
 
+    private final List<ImageTransform> transforms = List.of(
+            new Rotation90("Rotation 90°"),
+            new Rotation180("Rotation 180°"),
+            new Rotation270(("Rotation -90°")),
+            new FlipH("Symétrie horizontale"),
+            new FlipV("Symétrie verticale")
+    );
+
     private final List<ImageFilter> filters = List.of(
             new RGBSwapFilter(),
             new GrayscaleFilter(),
@@ -44,7 +52,7 @@ public class ImageAppController {
         imageView.fitHeightProperty().bind(centerPane.heightProperty());
         statusBar.setText("Chargez une image pour commencer.");
         menuVBox.getChildren().add(new Label("Transformations"));
-        for (ImageTransform.Type t : ImageTransform.Type.values()) {
+        for (ImageTransform t : transforms) {
             Button btn = new Button(t.getLabel());
             btn.setOnAction(e ->  applyTransform(t));
             menuVBox.getChildren().add(btn);
@@ -68,9 +76,9 @@ public class ImageAppController {
         statusBar.setText("Filtre appliqué : " + filter.getName());
     }
 
-    private void applyTransform(ImageTransform.Type type) {
+    private void applyTransform(ImageTransform type) {
         if (currentImage == null) { statusBar.setText("Aucune image chargée."); return; }
-        currentImage = ImageTransform.apply(currentImage, type);
+        currentImage = type.transform(currentImage);
         imageView.setImage(currentImage);
         statusBar.setText("Transformation appliquée : " + type.getLabel());
     }
