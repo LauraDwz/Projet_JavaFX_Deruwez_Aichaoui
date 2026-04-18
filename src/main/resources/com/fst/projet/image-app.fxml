@@ -14,25 +14,23 @@
         <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
     </padding>
     <center>
-        <ImageView fx:id="imageView"
-                   fitWidth="600"
-                   fitHeight="500"
-                   preserveRatio="true"
-        />
+        <StackPane fx:id="imageContainer">
+            <ImageView fx:id="imageView"
+                       preserveRatio="true"
+            />
+        </StackPane>
+
     </center>
     <bottom>
         <Label fx:id="statusBar"/>
     </bottom>
     <right>
         <VBox>
-            <Button text="Charger une image" onAction="#loadImage"/>
+            <Button text="Choisir un fichier" onAction="#loadImage"/>
             <Button text="Réinitialiser" onAction="#resetImage"/>
             <Separator/>
-            <Label text="Transformations"/>
-
-
+            <VBox fx:id="menuVBox" />
         </VBox>
-        <!-- Je ne sais pas quoi mettre ici, censé être la sidebar -->
     </right>
 
 </BorderPane>

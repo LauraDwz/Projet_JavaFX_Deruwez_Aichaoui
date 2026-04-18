@@ -63,7 +63,7 @@
                     <execution>
                         <id>default-cli</id>
                         <configuration>
-                            <mainClass>com.fst.projet/com.fst.projet.HelloApplication</mainClass>
+                            <mainClass>com.fst.projet/com.fst.projet.ImageProcessingApp</mainClass>
                             <launcher>app</launcher>
                             <jlinkZipName>app</jlinkZipName>
                             <jlinkImageName>app</jlinkImageName>
