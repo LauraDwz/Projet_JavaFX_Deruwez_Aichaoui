@@ -6,6 +6,7 @@ import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Separator;
+import javafx.scene.control.TextInputDialog;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
@@ -16,12 +17,16 @@ import javafx.stage.Window;
 
 import java.io.File;
 import java.util.List;
+import java.util.Optional;
 
 public class ImageAppController {
     @FXML
     private ImageView imageView;
     @FXML
     private Label statusBar;
+    @FXML
+    private Button tagButton;
+    @FXML Button saveButton;
 
     @FXML private Pane centerPane;
 
@@ -30,6 +35,7 @@ public class ImageAppController {
 
     private WritableImage originalImage;
     private WritableImage currentImage;
+    private ImageData imageData;
 
     private final List<ImageTransform> transforms = List.of(
             new Rotation90("Rotation 90°"),
@@ -67,6 +73,8 @@ public class ImageAppController {
             btn.setOnAction(e -> applyFilter(f));
             menuVBox.getChildren().add(btn);
         }
+
+        imageData = new ImageData();
     }
 
     private void applyFilter(ImageFilter filter) {
@@ -102,6 +110,7 @@ public class ImageAppController {
                 imageView.setImage(currentImage);
                 statusBar.setText("Image chargée : " + file.getName()
                         + "  (" + (int) img.getWidth() + " × " + (int) img.getHeight() + " px)");
+                imageData.setPath(file.getAbsolutePath());
             } catch (Exception ex) {
                 statusBar.setText("Erreur : impossible de charger l'image.");
             }
@@ -123,4 +132,32 @@ public class ImageAppController {
                 src.getPixelReader(), 0, 0);
         return wi;
     }
+
+    @FXML
+    private void setTag() {
+        if (currentImage == null) {
+            statusBar.setText("Aucune image chargée. Impossible d'y associer un tag");
+            return;
+        }
+        TextInputDialog dialog = new TextInputDialog();
+        dialog.setTitle("Ajouter un tag");
+        dialog.setHeaderText("Ajout d'un tag");
+        dialog.setContentText("Entrez un tag :");
+
+        Optional<String> result = dialog.showAndWait();
+
+        if (result.isPresent()) {
+            String tag = result.get().trim().toLowerCase();
+            if (!tag.isEmpty()) {
+                imageData.addTags(tag);
+                System.out.println(imageData.getTags());
+                statusBar.setText("Tag : " + tag + " ajouté !");
+            }
+        }
+    }
+    @FXML
+    private void save() {
+        System.out.println("On veut sauvegarder l'image");
+    }
 }
+

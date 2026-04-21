@@ -10,6 +10,11 @@
     -fx-border-width: 1 0 0 0;
 }
 
+.top-menu {
+    -fx-background-color: #fafafa;
+    -fx-border-color: #e6e6e6;
+    -fx-padding: 10 0 10 0;
+}
 .side-menu {
     -fx-background-color: #fafafa;
     -fx-padding: 15;
