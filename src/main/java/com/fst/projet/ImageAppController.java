@@ -69,7 +69,7 @@ public class ImageAppController {
         menuVBox.getChildren().add(new Label("Filtres"));
 
         for (ImageFilter f : filters) {
-            Button btn = new Button(f.getName());
+            Button btn = new Button(f.getLabel());
             btn.setOnAction(e -> applyFilter(f));
             menuVBox.getChildren().add(btn);
         }
@@ -79,13 +79,15 @@ public class ImageAppController {
 
     private void applyFilter(ImageFilter filter) {
         if (currentImage == null) { statusBar.setText("Aucune image chargée."); return; }
+        imageData.addTransformations(new TransformationData(filter.getLabel(),  currentImage));
         currentImage = filter.apply(currentImage);
         imageView.setImage(currentImage);
-        statusBar.setText("Filtre appliqué : " + filter.getName());
+        statusBar.setText("Filtre appliqué : " + filter.getLabel());
     }
 
     private void applyTransform(ImageTransform type) {
         if (currentImage == null) { statusBar.setText("Aucune image chargée."); return; }
+        imageData.addTransformations(new TransformationData(type.getLabel(),  currentImage));
         currentImage = type.transform(currentImage);
         imageView.setImage(currentImage);
         statusBar.setText("Transformation appliquée : " + type.getLabel());
@@ -120,6 +122,7 @@ public class ImageAppController {
     @FXML
     private void resetImage() {
         if (originalImage == null) return;
+        imageData.resetTransformations();
         currentImage = toWritable(originalImage);
         imageView.setImage(currentImage);
         statusBar.setText("Image réinitialisée.");
@@ -158,6 +161,8 @@ public class ImageAppController {
     @FXML
     private void save() {
         System.out.println("On veut sauvegarder l'image");
+        System.out.println(imageData.getTags());
+        imageData.printTransformations();
     }
 }
 

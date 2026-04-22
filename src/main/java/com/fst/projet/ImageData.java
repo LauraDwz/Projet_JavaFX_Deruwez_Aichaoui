@@ -30,4 +30,11 @@ public class ImageData {
     public void setTransformations(List<TransformationData> transformations) {
         this.transformations = transformations;
     }
+    public void addTransformations(TransformationData transformation) { this.transformations.add(transformation); }
+    public void resetTransformations() { this.transformations.clear(); }
+    public void printTransformations() {
+        for (TransformationData transformation : this.transformations) {
+            System.out.println(transformation.getType());
+        }
+    }
 }

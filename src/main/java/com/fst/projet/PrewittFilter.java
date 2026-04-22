@@ -77,7 +77,7 @@ public class PrewittFilter implements ImageFilter {
     }
 
     @Override
-    public String getName() {
+    public String getLabel() {
         return "Prewitt (contours)";
     }
 }

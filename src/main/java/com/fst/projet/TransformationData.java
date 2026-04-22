@@ -1,18 +1,16 @@
 package com.fst.projet;
 
+import javafx.scene.image.WritableImage;
+
 import java.util.HashMap;
 import java.util.Map;
 
 public class TransformationData {
 
     private String type;
-    private Map<String, Object> params;
+    private WritableImage image;
 
-    public TransformationData() {
-        this.params = new HashMap<>();
-    }
-    public TransformationData(String type) {
-        this();
+    public TransformationData(String type, WritableImage image) {
         this.type = type;
     }
     public String getType() {
@@ -21,10 +19,7 @@ public class TransformationData {
     public void setType(String type) {
         this.type = type;
     }
-    public Map<String, Object> getParams() {
-        return params;
-    }
-    public void setParams(Map<String, Object> params) {
-        this.params = params;
+    public void setParams(WritableImage image) {
+        this.image = image;
     }
 }

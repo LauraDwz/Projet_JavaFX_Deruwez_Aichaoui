@@ -11,7 +11,7 @@ public class GrayscaleFilter extends AbstractPixelFilter {
     }
 
     @Override
-    public String getName() {
+    public String getLabel() {
         return "Noir & Blanc";
     }
 }
