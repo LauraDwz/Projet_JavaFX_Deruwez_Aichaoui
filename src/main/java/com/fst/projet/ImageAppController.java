@@ -112,7 +112,7 @@ public class ImageAppController {
                 imageView.setImage(currentImage);
                 statusBar.setText("Image chargée : " + file.getName()
                         + "  (" + (int) img.getWidth() + " × " + (int) img.getHeight() + " px)");
-                imageData.setPath(file.getAbsolutePath());
+                imageData= new ImageData(file.getPath());
             } catch (Exception ex) {
                 statusBar.setText("Erreur : impossible de charger l'image.");
             }

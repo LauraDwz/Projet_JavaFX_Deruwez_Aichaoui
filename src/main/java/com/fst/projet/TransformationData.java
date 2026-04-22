@@ -2,8 +2,6 @@ package com.fst.projet;
 
 import javafx.scene.image.WritableImage;
 
-import java.util.HashMap;
-import java.util.Map;
 
 public class TransformationData {
 
@@ -19,7 +17,11 @@ public class TransformationData {
     public void setType(String type) {
         this.type = type;
     }
+
     public void setParams(WritableImage image) {
         this.image = image;
+    }
+    public WritableImage getImage() {
+        return image;
     }
 }

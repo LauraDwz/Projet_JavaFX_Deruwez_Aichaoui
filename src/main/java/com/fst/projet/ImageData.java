@@ -24,12 +24,8 @@ public class ImageData {
     public void setPath(String path) { this.path = path; }
 
     public List<String> getTags() { return tags; }
-    public void setTags(List<String> tags) { this.tags = tags; }
     public void addTags(String tag) { this.tags.add(tag); }
     public List<TransformationData> getTransformations() { return transformations; }
-    public void setTransformations(List<TransformationData> transformations) {
-        this.transformations = transformations;
-    }
     public void addTransformations(TransformationData transformation) { this.transformations.add(transformation); }
     public void resetTransformations() { this.transformations.clear(); }
     public void printTransformations() {
