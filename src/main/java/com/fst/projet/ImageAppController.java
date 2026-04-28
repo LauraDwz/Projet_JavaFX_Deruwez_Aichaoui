@@ -1,14 +1,14 @@
 package com.fst.projet;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
+import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.TilePane;
 import javafx.scene.layout.VBox;
@@ -136,36 +136,92 @@ public class ImageAppController {
 
     public void openSavedGallery() {
         List<ImageData> liste = SaveData.loadAllData();
+
         Stage stage = new Stage();
+
         TilePane tilePane = new TilePane();
         tilePane.setHgap(20);
         tilePane.setVgap(20);
+        tilePane.setPrefColumns(3);
 
-        for (ImageData data : liste) {
-            Image img = new Image(new File(data.getPath()).toURI().toString());
-            ImageView imageView = new ImageView(img);
-            imageView.setFitWidth(120);
-            imageView.setFitHeight(120);
-            imageView.setPreserveRatio(true);
+        // barre de recherche
+        TextField searchField = new TextField();
+        searchField.setPromptText("Rechercher par tag...");
 
-            Label label = new Label(data.getName());
+        // affichage initial
+        updateGallery(tilePane, liste, "", stage);
 
-            VBox box = new VBox(10, imageView, label);
-
-            box.setOnMouseClicked(e -> {
-                reloadSavedImage(data);
-                stage.close();
-            });
-
-            tilePane.getChildren().add(box);
-        }
+        // filtrage dynamique quand on tape
+        searchField.textProperty().addListener((obs, oldValue, newValue) -> {
+            updateGallery(tilePane, liste, newValue, stage);
+        });
 
         ScrollPane scroll = new ScrollPane(tilePane);
+        scroll.setFitToWidth(true);
 
-        Scene scene = new Scene(scroll, 500, 400);
+        VBox root = new VBox(15, searchField, scroll);
+
+        Scene scene = new Scene(root, 600, 450);
         stage.setScene(scene);
         stage.setTitle("Mes sauvegardes");
         stage.show();
+    }
+
+    public void updateGallery(TilePane tilePane, List<ImageData> liste, String recherche, Stage stage) {
+        tilePane.getChildren().clear();
+
+        for (ImageData data : liste) {
+
+            boolean correspond = false;
+
+            if (recherche == null || recherche.isEmpty()) {
+                correspond = true;
+            } else {
+                for (String tag : data.getTags()) {
+                    if (tag.toLowerCase().contains(recherche.toLowerCase())) {
+                        correspond = true;
+                        break;
+                    }
+                }
+            }
+
+            if (correspond) {
+                Image img = new Image(new File(data.getPath()).toURI().toString());
+
+                ImageView imageView = new ImageView(img);
+                imageView.setFitWidth(120);
+                imageView.setFitHeight(120);
+                imageView.setPreserveRatio(true);
+
+                Label label = new Label(data.getName());
+
+                FlowPane tagPane = new FlowPane();
+                tagPane.setHgap(5);
+                tagPane.setVgap(5);
+                tagPane.setAlignment(Pos.CENTER);
+                tagPane.setPrefWrapLength(120);
+                tagPane.setPrefWidth(120);
+                tagPane.setMaxWidth(120);
+
+                for (String tag : data.getTags()) {
+                    Label tagLabel = new Label("#" + tag);
+                    tagLabel.setStyle("-fx-background-color: lightgray; -fx-padding: 3 6 3 6; -fx-background-radius: 8;");
+                    tagPane.setAlignment(Pos.CENTER);
+                    tagPane.getChildren().add(tagLabel);
+                }
+
+                VBox box = new VBox(8, imageView, label, tagPane);
+                box.setAlignment(Pos.CENTER);
+                box.setStyle("-fx-padding:10; -fx-border-color: lightgray; -fx-border-radius: 10;");
+
+                box.setOnMouseClicked(e -> {
+                    reloadSavedImage(data);
+                    stage.close();
+                });
+
+                tilePane.getChildren().add(box);
+            }
+        }
     }
 
     public void reloadSavedImage(ImageData data) {
@@ -231,7 +287,7 @@ public class ImageAppController {
             String name = result.get().trim().toLowerCase();
             if (!name.isEmpty()) {
                 imageData.setPath("src/main/resources/com/fst/projet/images/" + name + ".png");
-
+                imageData.setName(name);
                 SaveFxImage.saveFxImage(originalImage , name);
                 SaveData.saveData(imageData);
                 statusBar.setText("Image enregistrée sous le nom " + name + ".");

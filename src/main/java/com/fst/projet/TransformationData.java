@@ -1,7 +1,5 @@
 package com.fst.projet;
 
-import javafx.scene.image.WritableImage;
-
 
 public class TransformationData {
 
@@ -12,8 +10,5 @@ public class TransformationData {
     }
     public String getType() {
         return type;
-    }
-    public void setType(String type) {
-        this.type = type;
     }
 }
