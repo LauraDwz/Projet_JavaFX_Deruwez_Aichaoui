@@ -8,7 +8,11 @@
         <HBox spacing="10" alignment="CENTER" styleClass="top-menu">
             <Button text="Ajouter un tag" onAction="#setTag"/>
             <Button text="Sauvegarder" fx:id="saveButton" onAction="#save"/>
+            <Separator/>
             <Button text="Ouvrir image éditée" onAction="#openImageSaved"/>
+            <Separator/>
+            <Button text="Chiffrer l'image" onAction="#encrypt"/>
+            <Button text="Déchiffrer l'image" onAction="#decrypt"/>
         </HBox>
     </top>
     <center>

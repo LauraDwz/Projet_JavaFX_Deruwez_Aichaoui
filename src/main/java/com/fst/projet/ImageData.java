@@ -36,9 +36,4 @@ public class ImageData {
     public List<String> getTransformations() { return transformations; }
     public void addTransformations(String transformation) { this.transformations.add(transformation); }
     public void resetTransformations() { this.transformations.clear(); }
-    public void printTransformations() {
-        for (String transformation : this.transformations) {
-            System.out.println(transformation);
-        }
-    }
 }

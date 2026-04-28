@@ -18,8 +18,6 @@ public class SaveFxImage {
             File file = new File("src/main/resources/com/fst/projet/images/" + name + ".png");
 
             ImageIO.write(bImage, "png", file);
-
-            System.out.println("Image JavaFX sauvegardée !");
         } catch (IOException e) {
             e.printStackTrace();
         }

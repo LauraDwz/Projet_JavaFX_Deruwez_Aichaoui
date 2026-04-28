@@ -23,7 +23,6 @@ public class SaveData {
             }
             liste.add(imageData);
             objectMapper.writerWithDefaultPrettyPrinter().writeValue(metadata, liste);
-            System.out.println("Metadata sauvegardée");
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -1,4 +1,5 @@
 package com.fst.projet;
+import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
@@ -16,6 +17,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.Window;
 
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
@@ -312,7 +314,6 @@ public class ImageAppController {
             statusBar.setText("Aucune image chargée. Impossible de l'enregistrer");
             return;
         }
-        imageData.printTransformations();
 
         TextInputDialog dialog = new TextInputDialog();
         dialog.setTitle("Enregistrer une image");
@@ -329,6 +330,70 @@ public class ImageAppController {
                 SaveFxImage.saveFxImage(originalImage , name);
                 SaveData.saveData(imageData);
                 statusBar.setText("Image enregistrée sous le nom " + name + ".");
+            }
+        }
+    }
+    @FXML
+    private void encrypt() {
+        TextInputDialog dialog = new TextInputDialog();
+        dialog.setTitle("Chiffrer l'image");
+        dialog.setHeaderText("Mot de passe");
+        dialog.setContentText("Entrez le mot de passe pour chiffrer : ");
+
+        Optional<String> result = dialog.showAndWait();
+
+        if (result.isPresent()) {
+            String password = result.get().trim().toLowerCase();
+            if (!password.isEmpty()) {
+                try {
+                    BufferedImage image = Security.encryptImage(toBufferedImage(originalImage), password);
+                    originalImage = SwingFXUtils.toFXImage(image, null);
+                    imageView.setImage(originalImage);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    public static BufferedImage toBufferedImage(WritableImage fxImage) {
+        return SwingFXUtils.fromFXImage(fxImage, null);
+    }
+
+    @FXML
+    private void decrypt() {
+        System.out.println("Seconde merde");
+        TextInputDialog dialog = new TextInputDialog();
+        dialog.setTitle("Déchiffrer l'image");
+        dialog.setHeaderText("Mot de passe");
+        dialog.setContentText("Entrez le mot de passe pour déchiffrer : ");
+
+        Optional<String> result = dialog.showAndWait();
+
+        if (result.isPresent()) {
+            String password = result.get().trim().toLowerCase();
+            if (!password.isEmpty()) {
+                try {
+                    BufferedImage image = Security.decryptImage(toBufferedImage(originalImage), password);
+                    WritableImage newImage = SwingFXUtils.toFXImage(image, null);
+                    imageView.setImage(newImage);
+
+                    Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+                    alert.setTitle("Mot de passe");
+                    alert.setHeaderText(null);
+                    alert.setContentText("Etait ce le bon mot de passe ? ");
+
+                    Optional<ButtonType> result2 = alert.showAndWait();
+                    boolean isOk = result2.isPresent() && result2.get() == ButtonType.OK;
+                    if (isOk) {
+                        originalImage = newImage;
+                    } else {
+                        imageView.setImage(originalImage);
+                    }
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         }
     }
