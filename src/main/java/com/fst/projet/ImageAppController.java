@@ -153,9 +153,7 @@ public class ImageAppController {
         updateGallery(tilePane, liste, "", stage);
 
         // filtrage dynamique quand on tape
-        searchField.textProperty().addListener((obs, oldValue, newValue) -> {
-            updateGallery(tilePane, liste, newValue, stage);
-        });
+        searchField.textProperty().addListener((obs, oldValue, newValue) -> updateGallery(tilePane, liste, newValue, stage));
 
         ScrollPane scroll = new ScrollPane(tilePane);
         scroll.setFitToWidth(true);
@@ -306,7 +304,7 @@ public class ImageAppController {
         }
     }
     @FXML
-    private void save() throws IOException {
+    private void save() {
         if (currentImage == null) {
             statusBar.setText("Aucune image chargée. Impossible de l'enregistrer");
             return;
