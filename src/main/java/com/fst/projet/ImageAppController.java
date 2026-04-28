@@ -224,6 +224,44 @@ public class ImageAppController {
             }
         }
     }
+    public void reloadTransformations(ImageData data) {
+
+        currentImage = toWritable(originalImage);
+
+        for (String transformation : data.getTransformations()) {
+            switch (transformation) {
+                case "Rotation 90°":
+                    currentImage = new Rotation90("Rotation 90°").transform(currentImage);
+                    break;
+                case "Rotation 180°":
+                    currentImage = new Rotation180("Rotation 180°").transform(currentImage);
+                    break;
+                case "Rotation -90°":
+                    currentImage = new Rotation270("Rotation -90°").transform(currentImage);
+                    break;
+                case "Symétrie horizontale":
+                    currentImage = new FlipH("Symétrie horizontale").transform(currentImage);
+                    break;
+                case "Symétrie verticale":
+                    currentImage = new FlipV("Symétrie verticale").transform(currentImage);
+                    break;
+                case "Sépia":
+                    currentImage = new SepiaFilter().apply(currentImage);
+                    break;
+                case "Noir & Blanc":
+                    currentImage = new GrayscaleFilter().apply(currentImage);
+                    break;
+                case "Échange RGB → GBR":
+                    currentImage = new RGBSwapFilter().apply(currentImage);
+                    break;
+                case "Prewitt (contours)":
+                    currentImage = new PrewittFilter().apply(currentImage);
+                    break;
+            }
+        }
+
+        imageView.setImage(currentImage);
+    }
 
     public void reloadSavedImage(ImageData data) {
         Image img = new Image(new File(data.getPath()).toURI().toString());
@@ -232,50 +270,9 @@ public class ImageAppController {
         imageView.setImage(currentImage);
         statusBar.setText("Image chargée : " + data.getName()
                 + "  (" + (int) img.getWidth() + " × " + (int) img.getHeight() + " px)");
-        imageData= new ImageData(data.getPath());
-        //Appliquer les transformations
-        for (String transformation : data.getTransformations()) {
-            switch (transformation) {
-                case "Rotation 90°" :
-                    Rotation90 rota90 = new Rotation90("Rotation 90°");
-                    currentImage = rota90.transform(currentImage);
-                    imageView.setImage(currentImage);
-                    break;
-                case "Rotation 180°":
-                    Rotation180 rota180 = new Rotation180("Rotation 180°");
-                    currentImage = rota180.transform(currentImage);
-                    break;
-                case "Rotation -90°":
-                    Rotation270 rota270 = new Rotation270("Rotation 180°");
-                    currentImage = rota270.transform(currentImage);
-                    break;
-                case "Symétrie horizontale":
-                    FlipH flipH = new FlipH("Symétrie horizontale");
-                    currentImage = flipH.transform(currentImage);
-                    break;
-                case "Symétrie verticale":
-                    FlipV flipV = new FlipV("Symétrie verticale");
-                    currentImage = flipV.transform(currentImage);
-                    break;
-                case "Sépia":
-                    SepiaFilter sepiaFilter = new SepiaFilter();
-                    currentImage = sepiaFilter.apply(currentImage);
-                    break;
-                case "Noir & Blanc":
-                    GrayscaleFilter grayscaleFilter = new GrayscaleFilter();
-                    currentImage = grayscaleFilter.apply(currentImage);
-                    break;
-                case "Échange RGB → GBR":
-                    RGBSwapFilter rgbSwapFilter = new RGBSwapFilter();
-                    currentImage = rgbSwapFilter.apply(currentImage);
-                    break;
-                case "Prewitt (contours)":
-                    PrewittFilter prewittFilter = new PrewittFilter();
-                    currentImage = prewittFilter.apply(currentImage);
-                    break;
-            }
-        }
-        imageView.setImage(currentImage);
+        //imageData= new ImageData(data.getPath());
+        imageData = data;
+        reloadTransformations(data);
     }
 
 
@@ -335,6 +332,10 @@ public class ImageAppController {
     }
     @FXML
     private void encrypt() {
+        if (originalImage == null) {
+            statusBar.setText("Aucune image chargée. Impossible de la chiffrer");
+            return;
+        }
         TextInputDialog dialog = new TextInputDialog();
         dialog.setTitle("Chiffrer l'image");
         dialog.setHeaderText("Mot de passe");
@@ -349,6 +350,7 @@ public class ImageAppController {
                     BufferedImage image = Security.encryptImage(toBufferedImage(originalImage), password);
                     originalImage = SwingFXUtils.toFXImage(image, null);
                     imageView.setImage(originalImage);
+                    statusBar.setText("Image chiffrée");
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -362,7 +364,10 @@ public class ImageAppController {
 
     @FXML
     private void decrypt() {
-        System.out.println("Seconde merde");
+        if (originalImage == null) {
+            statusBar.setText("Aucune image chargée. Impossible de la déchiffrer");
+            return;
+        }
         TextInputDialog dialog = new TextInputDialog();
         dialog.setTitle("Déchiffrer l'image");
         dialog.setHeaderText("Mot de passe");
@@ -375,8 +380,9 @@ public class ImageAppController {
             if (!password.isEmpty()) {
                 try {
                     BufferedImage image = Security.decryptImage(toBufferedImage(originalImage), password);
-                    WritableImage newImage = SwingFXUtils.toFXImage(image, null);
-                    imageView.setImage(newImage);
+
+                    WritableImage decrypted = SwingFXUtils.toFXImage(image, null);
+                    imageView.setImage(decrypted);
 
                     Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
                     alert.setTitle("Mot de passe");
@@ -386,11 +392,17 @@ public class ImageAppController {
                     Optional<ButtonType> result2 = alert.showAndWait();
                     boolean isOk = result2.isPresent() && result2.get() == ButtonType.OK;
                     if (isOk) {
-                        originalImage = newImage;
+                        originalImage = toWritable(decrypted);
+                        currentImage = toWritable(originalImage);
+                        System.out.println(imageData.getTransformations());
+                        imageView.setImage(currentImage);
+
+                        reloadTransformations(imageData);
+                        statusBar.setText("Image déchiffrée");
                     } else {
                         imageView.setImage(originalImage);
+                        statusBar.setText("Annulation du déchiffrement");
                     }
-
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
