@@ -14,7 +14,7 @@ public class ImageProcessingApp extends Application{
 
         FXMLLoader fxmlLoader = new FXMLLoader(ImageProcessingApp.class.getResource("image-app.fxml"));
         stage.setTitle("Traitement d'image");
-        Scene scene = new Scene(fxmlLoader.load(), 860, 580);
+        Scene scene = new Scene(fxmlLoader.load(), 860, 650);
         stage.setScene(scene);
         stage.show();
     }

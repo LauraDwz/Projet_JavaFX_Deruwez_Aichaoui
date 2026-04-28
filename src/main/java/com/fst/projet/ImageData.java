@@ -6,8 +6,8 @@ import java.util.List;
 public class ImageData {
 
     private String path;
-    private List<String> tags;
-    private List<TransformationData> transformations;
+    private final List<String> tags;
+    private final List<TransformationData> transformations;
 
     public ImageData() {
         this.tags = new ArrayList<>();

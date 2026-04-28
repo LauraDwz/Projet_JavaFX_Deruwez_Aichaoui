@@ -1,5 +1,6 @@
 package com.fst.projet;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
@@ -16,6 +17,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.Window;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,8 +26,6 @@ public class ImageAppController {
     private ImageView imageView;
     @FXML
     private Label statusBar;
-    @FXML
-    private Button tagButton;
     @FXML Button saveButton;
 
     @FXML private Pane centerPane;
@@ -79,7 +79,7 @@ public class ImageAppController {
 
     private void applyFilter(ImageFilter filter) {
         if (currentImage == null) { statusBar.setText("Aucune image chargée."); return; }
-        imageData.addTransformations(new TransformationData(filter.getLabel(),  currentImage));
+        imageData.addTransformations(new TransformationData(filter.getLabel()));
         currentImage = filter.apply(currentImage);
         imageView.setImage(currentImage);
         statusBar.setText("Filtre appliqué : " + filter.getLabel());
@@ -87,7 +87,7 @@ public class ImageAppController {
 
     private void applyTransform(ImageTransform type) {
         if (currentImage == null) { statusBar.setText("Aucune image chargée."); return; }
-        imageData.addTransformations(new TransformationData(type.getLabel(),  currentImage));
+        imageData.addTransformations(new TransformationData(type.getLabel()));
         currentImage = type.transform(currentImage);
         imageView.setImage(currentImage);
         statusBar.setText("Transformation appliquée : " + type.getLabel());
@@ -159,10 +159,32 @@ public class ImageAppController {
         }
     }
     @FXML
-    private void save() {
+    private void save() throws IOException {
+        if (currentImage == null) {
+            statusBar.setText("Aucune image chargée. Impossible de l'enregistrer");
+            return;
+        }
         System.out.println("On veut sauvegarder l'image");
         System.out.println(imageData.getTags());
         imageData.printTransformations();
+
+        TextInputDialog dialog = new TextInputDialog();
+        dialog.setTitle("Enregistrer une image");
+        dialog.setHeaderText("Nom de l'image");
+        dialog.setContentText("Entrez un nom : ");
+
+        Optional<String> result = dialog.showAndWait();
+
+        if (result.isPresent()) {
+            String name = result.get().trim().toLowerCase();
+            if (!name.isEmpty()) {
+                imageData.setPath("src/main/resources/com/fst/projet/images/" + name + ".png");
+
+                SaveFxImage.saveFxImage(originalImage , name);
+                SaveData.saveData(imageData);
+                statusBar.setText("Image enregistrée sous le nom " + name + ".");
+            }
+        }
     }
 }
 
