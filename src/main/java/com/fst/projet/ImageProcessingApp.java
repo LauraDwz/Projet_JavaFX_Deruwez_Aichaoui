@@ -11,7 +11,6 @@ import java.io.IOException;
 public class ImageProcessingApp extends Application{
     @Override
     public void start(Stage stage) throws IOException {
-
         FXMLLoader fxmlLoader = new FXMLLoader(ImageProcessingApp.class.getResource("image-app.fxml"));
         stage.setTitle("Traitement d'image");
         Scene scene = new Scene(fxmlLoader.load(), 860, 650);

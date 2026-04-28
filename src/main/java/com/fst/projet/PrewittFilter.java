@@ -6,20 +6,7 @@ import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
 import javafx.scene.paint.Color;
 
-/**
- * Filtre de Prewitt — détection de contours.
- *
- * Ce filtre ne peut pas étendre AbstractPixelFilter car il a besoin
- * d'accéder aux pixels voisins (noyau 3×3). Il implémente directement
- * l'interface ImageFilter.
- *
- * Masques de Prewitt :
- *   Gx (horizontal)     Gy (vertical)
- *  -1  0  +1           -1  -1  -1
- *  -1  0  +1            0   0   0
- *  -1  0  +1           +1  +1  +1
- * Gradient : G = sqrt(Gx² + Gy²), clampé à [0, 1].
- */
+
 public class PrewittFilter implements ImageFilter {
 
     private static final int[][] KX = {

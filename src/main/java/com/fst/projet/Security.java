@@ -12,7 +12,6 @@ public class Security {
 
         int width = img.getWidth();
         int height = img.getHeight();
-
         int[] pixels = new int[width * height];
 
         int index = 0;
@@ -23,7 +22,6 @@ public class Security {
         }
 
         int[] perm = generatePermutation(pixels.length, password);
-
         int[] shuffled = new int[pixels.length];
 
         for (int i = 0; i < pixels.length; i++) {
@@ -47,7 +45,6 @@ public class Security {
 
         int width = img.getWidth();
         int height = img.getHeight();
-
         int[] pixels = new int[width * height];
 
         int index = 0;
@@ -58,7 +55,6 @@ public class Security {
         }
 
         int[] perm = generatePermutation(pixels.length, password);
-
         int[] original = new int[pixels.length];
 
         for (int i = 0; i < pixels.length; i++) {

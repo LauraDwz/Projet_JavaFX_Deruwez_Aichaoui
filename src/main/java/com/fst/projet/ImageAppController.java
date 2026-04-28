@@ -320,7 +320,6 @@ public class ImageAppController {
         if (result.isPresent()) {
             String name = result.get().trim().toLowerCase();
             if (!name.isEmpty()) {
-                imageData.setPath("src/main/resources/com/fst/projet/images/" + name + ".png");
                 imageData.setName(name);
                 SaveFxImage.saveFxImage(originalImage , name);
                 SaveData.saveData(imageData);
