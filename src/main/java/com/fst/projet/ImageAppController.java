@@ -4,16 +4,16 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.Separator;
-import javafx.scene.control.TextInputDialog;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.TilePane;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 import javafx.stage.Window;
 
 import java.io.File;
@@ -127,6 +127,58 @@ public class ImageAppController {
         imageView.setImage(currentImage);
         statusBar.setText("Image réinitialisée.");
     }
+
+    @FXML
+    private void openImageSaved() {
+        System.out.println("Et là c'est la merde");
+        openSavedGallery();
+    }
+
+    public void openSavedGallery() {
+        List<ImageData> liste = SaveData.loadAllData();
+        Stage stage = new Stage();
+        TilePane tilePane = new TilePane();
+        tilePane.setHgap(20);
+        tilePane.setVgap(20);
+
+        for (ImageData data : liste) {
+            Image img = new Image(new File(data.getPath()).toURI().toString());
+            ImageView imageView = new ImageView(img);
+            imageView.setFitWidth(120);
+            imageView.setFitHeight(120);
+            imageView.setPreserveRatio(true);
+
+            Label label = new Label(data.getName());
+
+            VBox box = new VBox(10, imageView, label);
+
+            box.setOnMouseClicked(e -> {
+                reloadSavedImage(data);
+                stage.close();
+            });
+
+            tilePane.getChildren().add(box);
+        }
+
+        ScrollPane scroll = new ScrollPane(tilePane);
+
+        Scene scene = new Scene(scroll, 500, 400);
+        stage.setScene(scene);
+        stage.setTitle("Mes sauvegardes");
+        stage.show();
+    }
+
+    public void reloadSavedImage(ImageData data) {
+        Image img = new Image(new File(data.getPath()).toURI().toString());
+        originalImage = toWritable(img);
+        currentImage  = toWritable(img);
+        imageView.setImage(currentImage);
+        statusBar.setText("Image chargée : " + data.getName()
+                + "  (" + (int) img.getWidth() + " × " + (int) img.getHeight() + " px)");
+        imageData= new ImageData(data.getPath());
+        //Appliquer les transformations
+    }
+
 
     private WritableImage toWritable(Image src) {
         int w = (int) src.getWidth(), h = (int) src.getHeight();

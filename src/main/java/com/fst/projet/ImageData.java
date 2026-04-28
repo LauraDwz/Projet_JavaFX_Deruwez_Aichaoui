@@ -6,6 +6,7 @@ import java.util.List;
 public class ImageData {
 
     private String path;
+    private String name;
     private final List<String> tags;
     private final List<TransformationData> transformations;
 
@@ -17,6 +18,10 @@ public class ImageData {
     public ImageData(String path) {
         this();
         this.path = path;
+    }
+
+    public String getName() {
+        return this.name;
     }
 
     // GETTERS / SETTERS

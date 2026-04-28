@@ -28,4 +28,20 @@ public class SaveData {
             e.printStackTrace();
         }
     }
+
+    public static List<ImageData> loadAllData() {
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        File metadata = new File("src/main/resources/com/fst/projet/data.json");
+
+        try {
+            if (metadata.exists() && metadata.length() > 0) {
+                return objectMapper.readValue(metadata, new TypeReference<List<ImageData>>() {});
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return new ArrayList<>();
+    }
 }
