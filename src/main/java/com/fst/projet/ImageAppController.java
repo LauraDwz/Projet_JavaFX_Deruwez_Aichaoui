@@ -79,7 +79,7 @@ public class ImageAppController {
 
     private void applyFilter(ImageFilter filter) {
         if (currentImage == null) { statusBar.setText("Aucune image chargée."); return; }
-        imageData.addTransformations(new TransformationData(filter.getLabel()));
+        imageData.addTransformations(filter.getLabel());
         currentImage = filter.apply(currentImage);
         imageView.setImage(currentImage);
         statusBar.setText("Filtre appliqué : " + filter.getLabel());
@@ -87,7 +87,7 @@ public class ImageAppController {
 
     private void applyTransform(ImageTransform type) {
         if (currentImage == null) { statusBar.setText("Aucune image chargée."); return; }
-        imageData.addTransformations(new TransformationData(type.getLabel()));
+        imageData.addTransformations(type.getLabel());
         currentImage = type.transform(currentImage);
         imageView.setImage(currentImage);
         statusBar.setText("Transformation appliquée : " + type.getLabel());
@@ -130,7 +130,6 @@ public class ImageAppController {
 
     @FXML
     private void openImageSaved() {
-        System.out.println("Et là c'est la merde");
         openSavedGallery();
     }
 
@@ -233,6 +232,48 @@ public class ImageAppController {
                 + "  (" + (int) img.getWidth() + " × " + (int) img.getHeight() + " px)");
         imageData= new ImageData(data.getPath());
         //Appliquer les transformations
+        for (String transformation : data.getTransformations()) {
+            switch (transformation) {
+                case "Rotation 90°" :
+                    Rotation90 rota90 = new Rotation90("Rotation 90°");
+                    currentImage = rota90.transform(currentImage);
+                    imageView.setImage(currentImage);
+                    break;
+                case "Rotation 180°":
+                    Rotation180 rota180 = new Rotation180("Rotation 180°");
+                    currentImage = rota180.transform(currentImage);
+                    break;
+                case "Rotation -90°":
+                    Rotation270 rota270 = new Rotation270("Rotation 180°");
+                    currentImage = rota270.transform(currentImage);
+                    break;
+                case "Symétrie horizontale":
+                    FlipH flipH = new FlipH("Symétrie horizontale");
+                    currentImage = flipH.transform(currentImage);
+                    break;
+                case "Symétrie verticale":
+                    FlipV flipV = new FlipV("Symétrie verticale");
+                    currentImage = flipV.transform(currentImage);
+                    break;
+                case "Sépia":
+                    SepiaFilter sepiaFilter = new SepiaFilter();
+                    currentImage = sepiaFilter.apply(currentImage);
+                    break;
+                case "Noir & Blanc":
+                    GrayscaleFilter grayscaleFilter = new GrayscaleFilter();
+                    currentImage = grayscaleFilter.apply(currentImage);
+                    break;
+                case "Échange RGB → GBR":
+                    RGBSwapFilter rgbSwapFilter = new RGBSwapFilter();
+                    currentImage = rgbSwapFilter.apply(currentImage);
+                    break;
+                case "Prewitt (contours)":
+                    PrewittFilter prewittFilter = new PrewittFilter();
+                    currentImage = prewittFilter.apply(currentImage);
+                    break;
+            }
+        }
+        imageView.setImage(currentImage);
     }
 
 
@@ -261,7 +302,6 @@ public class ImageAppController {
             String tag = result.get().trim().toLowerCase();
             if (!tag.isEmpty()) {
                 imageData.addTags(tag);
-                System.out.println(imageData.getTags());
                 statusBar.setText("Tag : " + tag + " ajouté !");
             }
         }
@@ -272,8 +312,6 @@ public class ImageAppController {
             statusBar.setText("Aucune image chargée. Impossible de l'enregistrer");
             return;
         }
-        System.out.println("On veut sauvegarder l'image");
-        System.out.println(imageData.getTags());
         imageData.printTransformations();
 
         TextInputDialog dialog = new TextInputDialog();

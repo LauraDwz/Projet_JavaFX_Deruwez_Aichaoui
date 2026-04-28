@@ -8,7 +8,7 @@ public class ImageData {
     private String path;
     private String name;
     private final List<String> tags;
-    private final List<TransformationData> transformations;
+    private final List<String> transformations;
 
     public ImageData() {
         this.tags = new ArrayList<>();
@@ -33,12 +33,12 @@ public class ImageData {
 
     public List<String> getTags() { return tags; }
     public void addTags(String tag) { this.tags.add(tag); }
-    public List<TransformationData> getTransformations() { return transformations; }
-    public void addTransformations(TransformationData transformation) { this.transformations.add(transformation); }
+    public List<String> getTransformations() { return transformations; }
+    public void addTransformations(String transformation) { this.transformations.add(transformation); }
     public void resetTransformations() { this.transformations.clear(); }
     public void printTransformations() {
-        for (TransformationData transformation : this.transformations) {
-            System.out.println(transformation.getType());
+        for (String transformation : this.transformations) {
+            System.out.println(transformation);
         }
     }
 }
