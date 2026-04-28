@@ -18,6 +18,11 @@ public class SepiaFilter extends AbstractPixelFilter {
     }
 
     @Override
+    public String getId() {
+        return "sepia";
+    }
+
+    @Override
     public String getLabel() {
         return "Sépia";
     }

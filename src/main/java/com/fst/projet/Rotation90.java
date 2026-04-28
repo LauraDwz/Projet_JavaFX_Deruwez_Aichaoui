@@ -6,8 +6,8 @@ import javafx.scene.image.WritableImage;
 
 public class Rotation90 extends ImageTransform {
 
-    Rotation90(String label) {
-        super(label);
+    public Rotation90() {
+        super("rotation90", "Rotation 90°");
     }
 
     @Override

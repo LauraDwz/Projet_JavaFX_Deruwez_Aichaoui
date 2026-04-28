@@ -12,4 +12,8 @@ public class RGBSwapFilter extends AbstractPixelFilter {
     public String getLabel() {
         return "Échange RGB → GBR";
     }
+    @Override
+    public String getId() {
+        return "rgbswap";
+    }
 }

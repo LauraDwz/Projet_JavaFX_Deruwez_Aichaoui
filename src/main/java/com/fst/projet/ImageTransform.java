@@ -2,15 +2,27 @@ package com.fst.projet;
 
 import javafx.scene.image.WritableImage;
 
-public abstract class ImageTransform {
+public abstract class ImageTransform implements ImageOperation {
     protected final String label;
+    protected final String id;
 
-    ImageTransform(String label) {
+    public ImageTransform(String id, String label) {
+        this.id = id;
         this.label = label;
     }
 
-    protected String getLabel() {
+    @Override
+    public String getId() {
+        return id;
+    }
+
+    public String getLabel() {
         return label;
+    }
+
+    @Override
+    public WritableImage apply(WritableImage src) {
+        return transform(src);
     }
 
     protected abstract WritableImage transform(WritableImage src);

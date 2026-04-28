@@ -67,4 +67,9 @@ public class PrewittFilter implements ImageFilter {
     public String getLabel() {
         return "Prewitt (contours)";
     }
+
+    @Override
+    public String getId() {
+        return "prewitt";
+    }
 }

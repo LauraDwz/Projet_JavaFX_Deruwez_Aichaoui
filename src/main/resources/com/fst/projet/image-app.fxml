@@ -7,7 +7,7 @@
     <top>
         <HBox spacing="10" alignment="CENTER" styleClass="top-menu">
             <Button text="Ajouter un tag" onAction="#setTag"/>
-            <Button text="Sauvegarder" fx:id="saveButton" onAction="#save"/>
+            <Button text="Sauvegarder" onAction="#save"/>
             <Separator/>
             <Button text="Ouvrir image éditée" onAction="#openImageSaved"/>
             <Separator/>

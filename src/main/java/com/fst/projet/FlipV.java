@@ -6,8 +6,8 @@ import javafx.scene.image.WritableImage;
 
 public class FlipV extends ImageTransform {
 
-    FlipV(String label) {
-        super(label);
+    public FlipV() {
+        super("flipV", "Symétrie Verticale");
     }
 
     @Override

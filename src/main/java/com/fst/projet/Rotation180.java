@@ -5,9 +5,8 @@ import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
 
 public class Rotation180 extends ImageTransform {
-
-    Rotation180(String label) {
-        super(label);
+    public Rotation180() {
+        super("rotation180", "Rotation 180°");
     }
 
     @Override

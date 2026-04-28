@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.image.ImageView?>
+
+<VBox xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.fst.projet.GalleryController"
+      spacing="15"
+      alignment="TOP_CENTER"
+      prefWidth="650"
+      prefHeight="500">
+
+    <TextField fx:id="searchField"
+               promptText="Rechercher par tag..." />
+
+    <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS">
+        <content>
+            <TilePane fx:id="tilePane"
+                      hgap="20"
+                      vgap="20"
+                      prefColumns="3"/>
+        </content>
+    </ScrollPane>
+
+</VBox>

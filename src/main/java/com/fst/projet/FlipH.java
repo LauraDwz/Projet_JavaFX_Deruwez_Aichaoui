@@ -5,9 +5,8 @@ import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
 
 public class FlipH extends ImageTransform {
-
-    FlipH(String label) {
-        super(label);
+    public FlipH() {
+        super("flipH", "Symétrie Horizontale");
     }
 
     @Override
