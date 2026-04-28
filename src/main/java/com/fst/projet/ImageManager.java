@@ -82,4 +82,7 @@ public class ImageManager {
     public void addTagData(String tag) {
         this.imageData.addTags(tag);
     }
+    public void setPathImageData(String path) {
+        this.imageData.setPath(path);
+    }
 }

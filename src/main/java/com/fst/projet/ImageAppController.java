@@ -63,7 +63,7 @@ public class ImageAppController {
             btn.setOnAction(e -> applyFilter(f));
             menuVBox.getChildren().add(btn);
         }
-    } //Celle là est parfaite
+    }
 
     private void applyFilter(ImageFilter filter) {
         if (imageManager.noImage()) {
@@ -73,7 +73,7 @@ public class ImageAppController {
         imageManager.applyFilter(filter);
         imageView.setImage(imageManager.getCurrentImage());
         statusBar.setText("Filtre appliqué : " + filter.getLabel());
-    } //Celle là est parfaite
+    }
 
     private void applyTransform(ImageTransform type) {
         if (imageManager.noImage()) {
@@ -83,7 +83,7 @@ public class ImageAppController {
         imageManager.applyTransform(type);
         imageView.setImage(imageManager.getCurrentImage());
         statusBar.setText("Transformation appliquée : " + type.getLabel());
-    } //Celle là est parfaite
+    }
 
     @FXML
     private void loadImage(ActionEvent event) {
@@ -98,7 +98,7 @@ public class ImageAppController {
                 statusBar.setText("Erreur : impossible de charger l'image.");
             }
         }
-    } //Celle là est parfaite
+    }
 
     @FXML
     private void resetImage() {
@@ -106,7 +106,7 @@ public class ImageAppController {
         imageManager.reset();
         imageView.setImage(imageManager.getCurrentImage());
         statusBar.setText("Image réinitialisée.");
-    } //Celle là est parfaite
+    }
 
     @FXML
     private void openImageSaved() {
@@ -123,14 +123,14 @@ public class ImageAppController {
             statusBar.setText("Impossible d'ouvrir la galerie.");
             e.printStackTrace();
         }
-    } //Celle là est parfaite
+    }
 
     public void reloadSavedImage(ImageData data) {
         imageManager.reloadSavedImage(data);
         imageView.setImage(imageManager.getCurrentImage());
         statusBar.setText("Image chargée : " + data.getName()
                 + "  (" + (int) imageManager.getCurrentImage().getWidth() + " × " + (int) imageManager.getCurrentImage().getHeight() + " px)");
-    } //Celle là est parfaite
+    }
 
     @FXML
     private void setTag() {
@@ -148,7 +148,7 @@ public class ImageAppController {
                 statusBar.setText("Tag : " + tag + " ajouté !");
             }
         }
-    } //Celle là est parfaite
+    }
     @FXML
     private void save() {
         if (imageManager.noImage()) {
@@ -162,12 +162,14 @@ public class ImageAppController {
             String name = result.get().trim().toLowerCase();
             if (!name.isEmpty()) {
                 imageManager.setNameImageData(name);
-                SaveFxImage.saveFxImage(imageManager.getOriginalImage(), name);
+                String path = "src/main/resources/com/fst/projet/images/" + name + ".png";
+                imageManager.setPathImageData(path);
+                SaveFxImage.saveFxImage(imageManager.getOriginalImage(), name, path);
                 SaveData.saveData(imageManager.getImageData());
                 statusBar.setText("Image enregistrée sous le nom " + name + ".");
             }
         }
-    } //Celle là est parfaite
+    }
     @FXML
     private void encrypt() {
         if (imageManager.noImage()) {
@@ -179,7 +181,8 @@ public class ImageAppController {
             String password = result.get().trim().toLowerCase();
             if (!password.isEmpty()) {
                 try {
-                    imageManager.replaceOriginal(securityManager.encrypt(imageManager.getOriginalImage(), password));
+                    WritableImage newImage = securityManager.encrypt(imageManager.getOriginalImage(), password);
+                    imageManager.replaceOriginal(newImage);
                     imageView.setImage(imageManager.getOriginalImage());
                     statusBar.setText("Image chiffrée");
                 } catch (Exception e) {
@@ -187,7 +190,7 @@ public class ImageAppController {
                 }
             }
         }
-    }  //Celle là est parfaite
+    }
     @FXML
     private void decrypt() {
         if (imageManager.noImage()) {
@@ -208,8 +211,8 @@ public class ImageAppController {
 
                     if (isOk) {
                         imageManager.replaceOriginal(decrypted);
-                        imageView.setImage(imageManager.getCurrentImage());
                         imageManager.reloadTransformations();
+                        imageView.setImage(imageManager.getCurrentImage());
                         statusBar.setText("Image déchiffrée");
                     } else {
                         imageView.setImage(imageManager.getOriginalImage());
@@ -220,6 +223,6 @@ public class ImageAppController {
                 }
             }
         }
-    } //Celle là est parfaite
+    }
 }
 

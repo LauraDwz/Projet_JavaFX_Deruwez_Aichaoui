@@ -1,6 +1,5 @@
 package com.fst.projet;
 
-import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.image.WritableImage;
 
 import java.awt.image.BufferedImage;
