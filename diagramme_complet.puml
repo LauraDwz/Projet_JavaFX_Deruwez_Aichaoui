@@ -1,0 +1,224 @@
+@startuml
+skinparam classAttributeIconSize 0
+skinparam packageStyle rectangle
+
+package "Application" {
+    class Launcher {
+        +main(args : String[]) : void
+    }
+    class ImageProcessingApp {
+        +start(stage : Stage) : void
+    }
+    Launcher --> ImageProcessingApp
+}
+
+package "Operations d'image" {
+
+    interface ImageOperation {
+        +getId() : String
+        +getLabel() : String
+        +apply(image : WritableImage) : WritableImage
+    }
+
+    interface ImageFilter
+    ImageFilter --|> ImageOperation
+
+    abstract class ImageTransform {
+        #label : String
+        #id : String
+        +ImageTransform(id : String, label : String)
+        +getId() : String
+        +getLabel() : String
+        +apply(src : WritableImage) : WritableImage
+        #transform(src : WritableImage) : WritableImage
+    }
+
+    abstract class AbstractPixelFilter {
+        +apply(source : WritableImage) : WritableImage
+        #transformColor(c : Color) : Color
+    }
+
+    ImageTransform ..|> ImageOperation
+    AbstractPixelFilter ..|> ImageFilter
+
+    class Rotation90
+    class Rotation180
+    class Rotation270
+    class FlipH
+    class FlipV
+
+    Rotation90 --|> ImageTransform
+    Rotation180 --|> ImageTransform
+    Rotation270 --|> ImageTransform
+    FlipH --|> ImageTransform
+    FlipV --|> ImageTransform
+
+    class RGBSwapFilter
+    class GrayscaleFilter
+    class SepiaFilter
+
+    RGBSwapFilter --|> AbstractPixelFilter
+    GrayscaleFilter --|> AbstractPixelFilter
+    SepiaFilter --|> AbstractPixelFilter
+
+    class PrewittFilter {
+        -KX : int[][]
+        -KY : int[][]
+        +apply(source : WritableImage) : WritableImage
+        -luminance(c : Color) : double
+        -clamp(val : int, min : int, max : int) : int
+        +getLabel() : String
+        +getId() : String
+    }
+    PrewittFilter ..|> ImageFilter
+
+    class OperationRegistry {
+        -registry : Map<String, ImageOperation>
+        {static} -register(op : ImageOperation) : void
+        {static} +getOperation(id : String) : ImageOperation
+    }
+    OperationRegistry --> ImageOperation : contient *
+}
+
+package "Données" {
+    class ImageData {
+        -path : String
+        -name : String
+        -tags : List<String>
+        -transformations : List<String>
+        +ImageData()
+        +ImageData(path : String)
+        +getName() : String
+        +setName(name : String) : void
+        +setPath(path : String) : void
+        +getPath() : String
+        +getTags() : List<String>
+        +addTags(tag : String) : void
+        +getTransformations() : List<String>
+        +addTransformations(transformation : String) : void
+        +resetTransformations() : void
+    }
+}
+
+package "Services techniques" {
+    class ImageFunctions {
+        {static} +toWritable(src : Image) : WritableImage
+        {static} +toBufferedImage(fxImage : WritableImage) : BufferedImage
+        {static} +toFXImage(bufferedImage : BufferedImage) : WritableImage
+    }
+
+    class SaveFxImage {
+        {static} +saveFxImage(img : Image, name : String, path : String) : void
+    }
+
+    class SaveData {
+        {static} +saveData(imageData : ImageData) : void
+        {static} +loadAllData() : List<ImageData>
+    }
+
+    class DialogManager {
+        {static} +askText(title : String, header : String, content : String) : Optional<String>
+        {static} +askConfirmation(message : String) : boolean
+        {static} +fileChooserImg(title : String, event : ActionEvent) : File
+    }
+}
+SaveData --> ImageData
+
+package "Sécurité" {
+    class Security {
+        {static} +encryptImage(img : BufferedImage, password : String) : BufferedImage
+        {static} +decryptImage(img : BufferedImage, password : String) : BufferedImage
+        {static} -generatePermutation(size : int, password : String) : int[]
+    }
+
+    class SecurityManager {
+        +encrypt(image : WritableImage, password : String) : WritableImage
+        +decrypt(image : WritableImage, password : String) : WritableImage
+    }
+    SecurityManager --> Security
+    SecurityManager --> ImageFunctions
+}
+
+package "Gestion image" {
+    class ImageManager {
+        -originalImage : WritableImage
+        -currentImage : WritableImage
+        -imageData : ImageData
+        +ImageManager()
+        +noImage() : boolean
+        +loadImage(file : File) : void
+        +applyTransform(transform : ImageTransform) : void
+        +applyFilter(filter : ImageFilter) : void
+        +reloadCurrent() : void
+        +reset() : void
+        +reloadSavedImage(data : ImageData) : void
+        +reloadTransformations() : void
+        +replaceOriginal(newImage : WritableImage) : void
+        +getCurrentImage() : WritableImage
+        +getOriginalImage() : WritableImage
+        +getImageData() : ImageData
+        +setNameImageData(name : String) : void
+        +addTagData(tag : String) : void
+        +setPathImageData(path : String) : void
+    }
+    ImageManager *-- ImageData
+    ImageManager --> ImageFilter
+    ImageManager --> ImageTransform
+    ImageManager --> OperationRegistry
+    ImageManager --> ImageFunctions
+}
+
+package "Galerie sauvegardes" {
+    class GalleryManager {
+        +loadAll() : List<ImageData>
+        +filterByTag(liste : List<ImageData>, recherche : String) : List<ImageData>
+    }
+
+    class GalleryController {
+        -searchField : TextField
+        -tilePane : TilePane
+        -galleryManager : GalleryManager
+        -liste : List<ImageData>
+        -parentController : ImageAppController
+        +setParentController(controller : ImageAppController) : void
+        +initialize() : void
+        -updateGallery(images : List<ImageData>) : void
+        -createImageBox(data : ImageData) : VBox
+    }
+    GalleryController *-- GalleryManager
+    GalleryController --> ImageData
+    GalleryManager --> SaveData
+}
+
+package "Contrôle JavaFX" {
+    class ImageAppController {
+        -imageManager : ImageManager
+        -securityManager : SecurityManager
+        -imageView : ImageView
+        -statusBar : Label
+        -centerPane : Pane
+        -menuVBox : VBox
+        -transforms : List<ImageTransform>
+        -filters : List<ImageFilter>
+        +initialize() : void
+        -applyFilter(filter : ImageFilter) : void
+        -applyTransform(type : ImageTransform) : void
+        -loadImage(event : ActionEvent) : void
+        -resetImage() : void
+        -openImageSaved() : void
+        +reloadSavedImage(data : ImageData) : void
+        -setTag() : void
+        -save() : void
+        -encrypt() : void
+        -decrypt() : void
+    }
+    ImageProcessingApp --> ImageAppController
+    ImageAppController *-- ImageManager
+    ImageAppController *-- SecurityManager
+    ImageAppController --> DialogManager
+    ImageAppController --> SaveData
+    ImageAppController --> SaveFxImage
+    ImageAppController --> GalleryController
+    ImageAppController --> ImageData
+}
+@enduml

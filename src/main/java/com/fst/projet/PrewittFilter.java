@@ -54,7 +54,6 @@ public class PrewittFilter implements ImageFilter {
         return result;
     }
 
-    /** Luminance perceptuelle d'une couleur (niveaux de gris standard). */
     private double luminance(Color c) {
         return 0.299 * c.getRed() + 0.587 * c.getGreen() + 0.114 * c.getBlue();
     }

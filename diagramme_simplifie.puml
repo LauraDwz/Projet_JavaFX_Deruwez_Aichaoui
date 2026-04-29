@@ -1,0 +1,86 @@
+@startuml
+skinparam classAttributeIconSize 0
+skinparam packageStyle rectangle
+
+package "Traitements" {
+
+    interface ImageOperation
+
+    interface ImageFilter
+    abstract class ImageTransform
+    abstract class AbstractPixelFilter
+
+    ImageFilter --|> ImageOperation
+    ImageTransform ..|> ImageOperation
+    AbstractPixelFilter ..|> ImageFilter
+
+    class Rotation90
+    class Rotation180
+    class Rotation270
+    class FlipH
+    class FlipV
+
+    Rotation90 --|> ImageTransform
+    Rotation180 --|> ImageTransform
+    Rotation270 --|> ImageTransform
+    FlipH --|> ImageTransform
+    FlipV --|> ImageTransform
+
+    class RGBSwapFilter
+    class GrayscaleFilter
+    class SepiaFilter
+    class PrewittFilter
+
+    RGBSwapFilter --|> AbstractPixelFilter
+    GrayscaleFilter --|> AbstractPixelFilter
+    SepiaFilter --|> AbstractPixelFilter
+    PrewittFilter ..|> ImageFilter
+
+    class OperationRegistry
+    OperationRegistry --> ImageOperation : référence *
+}
+
+package "Métier" {
+    class ImageManager
+    class ImageData
+
+    ImageManager *-- ImageData
+    ImageManager --> ImageOperation
+    ImageManager --> OperationRegistry
+}
+
+package "Sécurité / Sauvegarde" {
+    class SecurityManager
+    class Security
+    class SaveData
+    class SaveFxImage
+    class ImageFunctions
+
+    SecurityManager --> Security
+    SecurityManager --> ImageFunctions
+    SaveData --> ImageData
+}
+
+package "Interface JavaFX" {
+    class ImageProcessingApp
+    class ImageAppController
+    class GalleryController
+    class GalleryManager
+    class DialogManager
+    class Launcher
+
+    Launcher --> ImageProcessingApp
+    ImageProcessingApp --> ImageAppController
+
+    ImageAppController *-- ImageManager
+    ImageAppController *-- SecurityManager
+    ImageAppController --> SaveData
+    ImageAppController --> SaveFxImage
+    ImageAppController --> DialogManager
+    ImageAppController --> GalleryController
+
+    GalleryController *-- GalleryManager
+    GalleryController --> ImageData
+    GalleryManager --> SaveData
+}
+@enduml
